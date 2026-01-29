@@ -357,7 +357,7 @@
         .hour_up_cntr(slv_reg0[1]),
         .min_up_cntr(slv_reg0[2]),
         .clear(slv_reg0[3]),
-        .sec(sec), .min(min));
+        .hour(hour), .min(min));
 	// User logic ends
 
 	endmodule
