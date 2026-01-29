@@ -16,16 +16,7 @@
 	(
 		// Users to add ports here
 
-		input wire btn_start, 
-        input wire btn_lap,  
-        input wire btn_clear, 
-
-
 		// User ports ends
-
-		// input btn_start	(slv_reg0[0]), 
-		// .btn_lap	(slv_reg0[1]), 
-		// .btn_clear	(slv_reg0[3]),
 
 		// Do not modify the ports beyond this line
 
@@ -360,10 +351,10 @@
 
 	  assign S_AXI_RDATA = 
 	  (axi_araddr[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB] == 3'h0) ? slv_reg0 : 
-	  (axi_araddr[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB] == 3'h1) ? {16'b0, fnd_sec, fnd_csec} : //slv_reg1
-	  (axi_araddr[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB] == 3'h2) ? {30'b0, lap, start_stop} : //slv_reg2
-	  (axi_araddr[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB] == 3'h3) ? slv_reg3 :
-	  (axi_araddr[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB] == 3'h4) ? slv_reg4 : 
+	  (axi_araddr[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB] == 3'h1) ? fnd_sec : //slv_reg1
+	  (axi_araddr[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB] == 3'h2) ? fnd_csec: //slv_reg2
+	  (axi_araddr[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB] == 3'h3) ? start_stop :
+	  (axi_araddr[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB] == 3'h4) ? lap : 
 	  (axi_araddr[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB] == 3'h5) ? slv_reg5 : 
 	  (axi_araddr[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB] == 3'h6) ? slv_reg6 : 
 	  (axi_araddr[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB] == 3'h7) ? slv_reg7 : 0;  
@@ -377,9 +368,9 @@
 	.reset_p	(~S_AXI_ARESETN),
     
 	//--instance's btn-- 
-	.btn_start  (btn_start | slv_reg0[0]), 	// btn_start = hardware control
-	.btn_lap    (btn_lap   | slv_reg0[1]), 	// slv_reg = software(registor) control
-	.btn_clear  (btn_clear | slv_reg0[3]),
+	.btn_start(slv_reg0[0]), 	
+	.btn_lap(slv_reg0[1]), 	
+	.btn_clear(slv_reg0[3]),
     
 	//--instance's output--
 	.fnd_sec	(fnd_sec), 
