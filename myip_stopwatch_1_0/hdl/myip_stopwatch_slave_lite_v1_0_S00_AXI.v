@@ -1,7 +1,7 @@
 
 `timescale 1 ns / 1 ps
 
-	module stopwatch_slave_lite_v1_0_S00_AXI #
+	module myip_stopwatch_slave_lite_v1_0_S00_AXI #
 	(
 		// Users to add parameters here
 
@@ -17,7 +17,6 @@
 		// Users to add ports here
 
 		// User ports ends
-
 		// Do not modify the ports beyond this line
 
 		// Global Clock Signal
@@ -229,7 +228,6 @@
 	                // Slave register 0
 	                slv_reg0[(byte_index*8) +: 8] <= S_AXI_WDATA[(byte_index*8) +: 8];
 	              end  
-
 	          3'h1:
 	            for ( byte_index = 0; byte_index <= (C_S_AXI_DATA_WIDTH/8)-1; byte_index = byte_index+1 )
 	              if ( S_AXI_WSTRB[byte_index] == 1 ) begin
@@ -244,7 +242,6 @@
 	                // Slave register 2
 	                slv_reg2[(byte_index*8) +: 8] <= S_AXI_WDATA[(byte_index*8) +: 8];
 	              end  
-
 	          3'h3:
 	            for ( byte_index = 0; byte_index <= (C_S_AXI_DATA_WIDTH/8)-1; byte_index = byte_index+1 )
 	              if ( S_AXI_WSTRB[byte_index] == 1 ) begin
@@ -352,14 +349,13 @@
 	  assign S_AXI_RDATA = 
 	  (axi_araddr[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB] == 3'h0) ? slv_reg0 : 
 	  (axi_araddr[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB] == 3'h1) ? fnd_sec : //slv_reg1
-	  (axi_araddr[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB] == 3'h2) ? fnd_csec: //slv_reg2
+	  (axi_araddr[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB] == 3'h2) ? fnd_csec : //slv_reg2
 	  (axi_araddr[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB] == 3'h3) ? start_stop :
 	  (axi_araddr[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB] == 3'h4) ? lap : 
 	  (axi_araddr[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB] == 3'h5) ? slv_reg5 : 
 	  (axi_araddr[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB] == 3'h6) ? slv_reg6 : 
 	  (axi_araddr[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB] == 3'h7) ? slv_reg7 : 0;  
 	// Add user logic here
-
 	
 	stop_watch stopwatch(
     
@@ -368,9 +364,9 @@
 	.reset_p	(~S_AXI_ARESETN),
     
 	//--instance's btn-- 
-	.btn_start(slv_reg0[0]), 	
-	.btn_lap(slv_reg0[1]), 	
-	.btn_clear(slv_reg0[3]),
+	.btn_start  (slv_reg0[0]), 	// btn_start = hardware control
+	.btn_lap    (slv_reg0[1]), 	// slv_reg = software(registor) control
+	.btn_clear  (slv_reg0[3]),
     
 	//--instance's output--
 	.fnd_sec	(fnd_sec), 
@@ -378,6 +374,7 @@
     .start_stop	(start_stop), 
 	.lap		(lap)
 	);
+
 
 	// User logic ends
 

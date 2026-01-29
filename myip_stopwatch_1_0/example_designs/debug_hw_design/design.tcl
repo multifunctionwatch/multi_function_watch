@@ -27,8 +27,8 @@ proc create_ipi_design { offsetfile design_name } {
 	connect_bd_net [get_bd_pins sys_reset_0/slowest_sync_clk] [get_bd_pins sys_clk_0/clk_out1]
 	connect_bd_net [get_bd_pins sys_clk_0/locked] [get_bd_pins sys_reset_0/dcm_locked]
 
-	# Create instance: stopwatch_0, and set properties
-	set stopwatch_0 [ create_bd_cell -type ip -vlnv localdomain:user:stopwatch:1.0 stopwatch_0 ]
+	# Create instance: myip_stopwatch_0, and set properties
+	set myip_stopwatch_0 [ create_bd_cell -type ip -vlnv localdomain:user:myip_stopwatch:1.0 myip_stopwatch_0 ]
 
 	# Create instance: jtag_axi_0, and set properties
 	set jtag_axi_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:jtag_axi jtag_axi_0 ]
@@ -45,56 +45,35 @@ proc create_ipi_design { offsetfile design_name } {
 	connect_bd_net [get_bd_pins axi_peri_interconnect/S00_ARESETN] [get_bd_pins sys_reset_0/peripheral_aresetn]
 	connect_bd_intf_net [get_bd_intf_pins jtag_axi_0/M_AXI] [get_bd_intf_pins axi_peri_interconnect/S00_AXI]
 
-	set_property -dict [ list CONFIG.NUM_MI {3} ] $axi_peri_interconnect
+	set_property -dict [ list CONFIG.NUM_MI {1} ] $axi_peri_interconnect
 	connect_bd_net [get_bd_pins axi_peri_interconnect/M00_ACLK] [get_bd_pins sys_clk_0/clk_out1]
 	connect_bd_net [get_bd_pins axi_peri_interconnect/M00_ARESETN] [get_bd_pins sys_reset_0/peripheral_aresetn]
-	connect_bd_net [get_bd_pins axi_peri_interconnect/M01_ACLK] [get_bd_pins sys_clk_0/clk_out1]
-	connect_bd_net [get_bd_pins axi_peri_interconnect/M01_ARESETN] [get_bd_pins sys_reset_0/peripheral_aresetn]
-	connect_bd_net [get_bd_pins axi_peri_interconnect/M02_ACLK] [get_bd_pins sys_clk_0/clk_out1]
-	connect_bd_net [get_bd_pins axi_peri_interconnect/M02_ARESETN] [get_bd_pins sys_reset_0/peripheral_aresetn]
 
-	# Connect all clock & reset of stopwatch_0 slave interfaces..
-	connect_bd_intf_net [get_bd_intf_pins axi_peri_interconnect/M00_AXI] [get_bd_intf_pins stopwatch_0/S00_AXI]
-	connect_bd_net [get_bd_pins stopwatch_0/s00_axi_aclk] [get_bd_pins sys_clk_0/clk_out1]
-	connect_bd_net [get_bd_pins stopwatch_0/s00_axi_aresetn] [get_bd_pins sys_reset_0/peripheral_aresetn]
-	connect_bd_intf_net [get_bd_intf_pins axi_peri_interconnect/M01_AXI] [get_bd_intf_pins stopwatch_0/S_AXI_INTR]
-	connect_bd_net [get_bd_pins stopwatch_0/s_axi_intr_aclk] [get_bd_pins sys_clk_0/clk_out1]
-	connect_bd_net [get_bd_pins stopwatch_0/s_axi_intr_aresetn] [get_bd_pins sys_reset_0/peripheral_aresetn]
-
-	# Create instance: axi_gpio_irq, and set properties
-	set axi_gpio_irq [ create_bd_cell -type ip -vlnv xilinx.com:ip:axi_gpio axi_gpio_irq ]
-	set_property -dict [ list CONFIG.C_ALL_INPUTS {1} CONFIG.C_GPIO_WIDTH {1} ] $axi_gpio_irq
-	connect_bd_net [get_bd_pins axi_gpio_irq/s_axi_aclk] [get_bd_pins sys_clk_0/clk_out1]
-	connect_bd_net [get_bd_pins axi_gpio_irq/s_axi_aresetn] [get_bd_pins sys_reset_0/peripheral_aresetn]
-	connect_bd_intf_net [get_bd_intf_pins axi_gpio_irq/S_AXI] [get_bd_intf_pins axi_peri_interconnect/M02_AXI]
-	connect_bd_net [get_bd_pins stopwatch_0/irq] [get_bd_pins axi_gpio_irq/gpio_io_i]
+	# Connect all clock & reset of myip_stopwatch_0 slave interfaces..
+	connect_bd_intf_net [get_bd_intf_pins axi_peri_interconnect/M00_AXI] [get_bd_intf_pins myip_stopwatch_0/S00_AXI]
+	connect_bd_net [get_bd_pins myip_stopwatch_0/s00_axi_aclk] [get_bd_pins sys_clk_0/clk_out1]
+	connect_bd_net [get_bd_pins myip_stopwatch_0/s00_axi_aresetn] [get_bd_pins sys_reset_0/peripheral_aresetn]
 
 
 	# Auto assign address
 	assign_bd_address
 
-	# Copy all address to stopwatch_include.tcl file
+	# Copy all address to myip_stopwatch_include.tcl file
 	set bd_path [get_property DIRECTORY [current_project]]/[current_project].srcs/[current_fileset]/bd
 	upvar 1 $offsetfile offset_file
-	set offset_file "${bd_path}/stopwatch_include.tcl"
+	set offset_file "${bd_path}/myip_stopwatch_include.tcl"
 	set fp [open $offset_file "w"]
 	puts $fp "# Configuration address parameters"
 
-	set offset [get_property OFFSET [get_bd_addr_segs /jtag_axi_0/Data/SEG_axi_gpio_irq_Reg ]]
-	puts $fp "set axi_gpio_irq_addr ${offset}"
-
-	set offset [get_property OFFSET [get_bd_addr_segs /jtag_axi_0/Data/SEG_stopwatch_0_S00_AXI_* ]]
+	set offset [get_property OFFSET [get_bd_addr_segs /jtag_axi_0/Data/SEG_myip_stopwatch_0_S00_AXI_* ]]
 	puts $fp "set s00_axi_addr ${offset}"
-
-	set offset [get_property OFFSET [get_bd_addr_segs /jtag_axi_0/Data/SEG_stopwatch_0_S_AXI_INTR_* ]]
-	puts $fp "set s_axi_intr_addr ${offset}"
 
 	close $fp
 }
 
 # Set IP Repository and Update IP Catalogue 
-set ip_path [file dirname [file normalize [get_property XML_FILE_NAME [ipx::get_cores localdomain:user:stopwatch:1.0]]]]
-set hw_test_file ${ip_path}/example_designs/debug_hw_design/stopwatch_hw_test.tcl
+set ip_path [file dirname [file normalize [get_property XML_FILE_NAME [ipx::get_cores localdomain:user:myip_stopwatch:1.0]]]]
+set hw_test_file ${ip_path}/example_designs/debug_hw_design/myip_stopwatch_hw_test.tcl
 
 set repo_paths [get_property ip_repo_paths [current_fileset]] 
 if { [lsearch -exact -nocase $repo_paths $ip_path ] == -1 } {
@@ -112,7 +91,7 @@ lappend all_bd $bd_name
 }
 
 for { set i 1 } { 1 } { incr i } {
-	set design_name "stopwatch_hw_${i}"
+	set design_name "myip_stopwatch_hw_${i}"
 	if { [lsearch -exact -nocase $all_bd $design_name ] == -1 } {
 		break
 	}

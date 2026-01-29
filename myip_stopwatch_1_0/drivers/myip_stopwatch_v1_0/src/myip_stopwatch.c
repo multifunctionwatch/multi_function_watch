@@ -1,6 +1,6 @@
 
 
 /***************************** Include Files *******************************/
-#include "stopwatch.h"
+#include "myip_stopwatch.h"
 
 /************************** Function Definitions ***************************/
