@@ -23,19 +23,20 @@
 module watch(
     input clk, reset_p,
     input start_pause,
+    input hour_up_cntr,
     input min_up_cntr,
-    input sec_up_cntr,
     input clear,
-    output reg[7:0] sec, min);
+    output reg min, hour);
     
-    wire start_pause_pedge, min_up_cntr_pedge, sec_up_cntr_pedge, clear_pedge;
+    reg [7:0] sec;
+    wire start_pause_pedge, hour_up_cntr_pedge, min_up_cntr_pedge, clear_pedge;
     
     button_cntr start_pause0(.clk(clk), .reset_p(reset_p),
                         .btn(start_pause), .btn_pedge(start_pause_pedge));
+    button_cntr hour_up_cntr0(.clk(clk), .reset_p(reset_p),
+                        .btn(hour_up_cntr), .btn_pedge(hour_up_cntr_pedge));
     button_cntr min_up_cntr0(.clk(clk), .reset_p(reset_p),
-                        .btn(min_up_cntr), .btn_pedge(min_up_cntr_pedge));
-    button_cntr sec_up_cntr0(.clk(clk), .reset_p(reset_p),
-                        .btn(sec_up_cntr), .btn_pedge(sec_up_cntr_pedge));  
+                        .btn(min_up_cntr), .btn_pedge(min_up_cntr_pedge));  
     button_cntr clear0(.clk(clk), .reset_p(reset_p),
                         .btn(clear), .btn_pedge(clear_pedge));   
                                              
@@ -52,20 +53,22 @@ module watch(
             cnt_sysclk = 0;
             sec = 0;
             min = 0;
+            hour = 0;
         end    
         else begin
             if(set_watch)begin
-                if(sec_up_cntr_pedge)begin
-                    if(sec >= 59)sec = 0;
-                    else sec = sec + 1;
-                end
                 if(min_up_cntr_pedge)begin
-                    if(min >= 59)min = 0;
-                    else min = min + 1;                
+                    if(min >= 59)sec = 0;
+                    else min = min + 1;
+                end
+                if(hour_up_cntr_pedge)begin
+                    if(hour >= 23)min = 0;
+                    else hour = hour + 1;                
                 end
                 if(clear_pedge)begin
                     sec = 0;
                     min = 0;
+                    hour = 0;
                 end
             end
             else begin
@@ -73,7 +76,12 @@ module watch(
                     cnt_sysclk = 0;
                     if(sec >= 59)begin
                         sec = 0;
-                        if(min >= 59) min = 0;
+                        if (min >= 59)begin 
+                            min = 0;
+                                if(hour >= 23) 
+                                hour = 0;
+                            else hour = hour + 1;
+                        end
                         else min = min + 1;
                     end
                     else sec = sec + 1;

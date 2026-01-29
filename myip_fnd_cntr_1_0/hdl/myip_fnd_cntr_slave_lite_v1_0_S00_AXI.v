@@ -1,7 +1,7 @@
 
 `timescale 1 ns / 1 ps
 
-	module myip_watch_slave_lite_v1_0_S00_AXI #
+	module myip_fnd_cntr_slave_lite_v1_0_S00_AXI #
 	(
 		// Users to add parameters here
 
@@ -15,6 +15,8 @@
 	)
 	(
 		// Users to add ports here
+		output [7:0] seg,
+		output [3:0] com,
 
 		// User ports ends
 		// Do not modify the ports beyond this line
@@ -340,24 +342,20 @@
 	          end                                       
 	        end                                         
 	// Implement memory mapped register select and read logic generation
-	  wire [7:0] hour, min;
-	  assign S_AXI_RDATA = 
-	  (axi_araddr[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB] == 3'h0) ? slv_reg0 : 
-	  (axi_araddr[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB] == 3'h1) ? hour : 
-	  (axi_araddr[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB] == 3'h2) ? min : 
-	  (axi_araddr[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB] == 3'h3) ? slv_reg3 : 
-	  (axi_araddr[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB] == 3'h4) ? slv_reg4 : 
-	  (axi_araddr[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB] == 3'h5) ? slv_reg5 : 
-	  (axi_araddr[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB] == 3'h6) ? slv_reg6 : 
-	  (axi_araddr[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB] == 3'h7) ? 32'h1234 : 0; 
+	  assign S_AXI_RDATA = (axi_araddr[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB] == 3'h0) ? slv_reg0 : 
+                           (axi_araddr[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB] == 3'h1) ? slv_reg1 : 
+                           (axi_araddr[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB] == 3'h2) ? slv_reg2 : 
+                           (axi_araddr[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB] == 3'h3) ? slv_reg3 : 
+                           (axi_araddr[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB] == 3'h4) ? slv_reg4 : 
+                           (axi_araddr[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB] == 3'h5) ? slv_reg5 : 
+                           (axi_araddr[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB] == 3'h6) ? slv_reg6 : 
+                           (axi_araddr[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB] == 3'h7) ? 32'h1234 : 0; 
 	// Add user logic here
-      watch watchip(
-        .clk(S_AXI_ACLK), .reset_p(~S_AXI_ARESETN),
-        .start_pause(slv_reg0[0]),
-        .hour_up_cntr(slv_reg0[1]),
-        .min_up_cntr(slv_reg0[2]),
-        .clear(slv_reg0[3]),
-        .sec(sec), .min(min));
+        FND_ctr fnd_insts(
+            .clk(S_AXI_ACLK), .reset_p(~S_AXI_ARESETN),
+            .fnd_value(slv_reg0), .hex_bcd(slv_reg1),
+            .seg(seg), .com(com)
+         );
 	// User logic ends
 
 	endmodule
