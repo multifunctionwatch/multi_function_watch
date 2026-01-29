@@ -351,7 +351,7 @@
 	  (axi_araddr[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB] == 3'h6) ? slv_reg6 : 
 	  (axi_araddr[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB] == 3'h7) ? 32'h1234 : 0; 
 	// Add user logic here
-      watch watchip(
+      watch watch_ip(
         .clk(S_AXI_ACLK), .reset_p(~S_AXI_ARESETN),
         .start_pause(slv_reg0[0]),
         .hour_up_cntr(slv_reg0[1]),

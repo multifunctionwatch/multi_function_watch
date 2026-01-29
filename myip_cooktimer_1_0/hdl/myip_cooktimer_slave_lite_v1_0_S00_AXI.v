@@ -354,7 +354,7 @@
                            (axi_araddr[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB] == 3'h7) ? slv_reg7 : 0; 
 	// Add user logic here
 	
-	cook_timer ct(
+	cook_timer coook(
     .clk(S_AXI_ACLK),
     .reset_p(~S_AXI_ARESETN),
     .btn_start_pause(slv_reg0[0]),
