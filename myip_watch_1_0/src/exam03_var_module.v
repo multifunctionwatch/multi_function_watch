@@ -26,7 +26,7 @@ module watch(
     input hour_up_cntr,
     input min_up_cntr,
     input clear,
-    output reg min, hour);
+    output reg [7:0] min, hour);
     
     reg [7:0] sec;
     wire start_pause_pedge, hour_up_cntr_pedge, min_up_cntr_pedge, clear_pedge;
@@ -58,11 +58,11 @@ module watch(
         else begin
             if(set_watch)begin
                 if(min_up_cntr_pedge)begin
-                    if(min >= 59)sec = 0;
+                    if(min >= 59) min = 0;
                     else min = min + 1;
                 end
                 if(hour_up_cntr_pedge)begin
-                    if(hour >= 23)min = 0;
+                    if(hour >= 23) hour = 0;
                     else hour = hour + 1;                
                 end
                 if(clear_pedge)begin
