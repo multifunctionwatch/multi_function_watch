@@ -3,7 +3,7 @@
   <spirit:vendor>user.org</spirit:vendor>
   <spirit:library>user</spirit:library>
   <spirit:name>myip_watch</spirit:name>
-  <spirit:version>1.2</spirit:version>
+  <spirit:version>1.3</spirit:version>
   <spirit:busInterfaces>
     <spirit:busInterface>
       <spirit:name>S00_AXI</spirit:name>
@@ -266,7 +266,7 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>viewChecksum</spirit:name>
-            <spirit:value>e75b80e2</spirit:value>
+            <spirit:value>5ea4c51d</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -282,7 +282,7 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>viewChecksum</spirit:name>
-            <spirit:value>e75b80e2</spirit:value>
+            <spirit:value>5ea4c51d</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -755,7 +755,7 @@
     <spirit:fileSet>
       <spirit:name>xilinx_xpgui_view_fileset</spirit:name>
       <spirit:file>
-        <spirit:name>xgui/myip_watch_v1_2.tcl</spirit:name>
+        <spirit:name>xgui/myip_watch_v1_3.tcl</spirit:name>
         <spirit:fileType>tclSource</spirit:fileType>
         <spirit:userFileType>CHECKSUM_080b65eb</spirit:userFileType>
         <spirit:userFileType>XGUI_VERSION_2</spirit:userFileType>
@@ -839,14 +839,15 @@
       <xilinx:upgrades>
         <xilinx:canUpgradeFrom>user.org:user:myip_watch:1.0</xilinx:canUpgradeFrom>
         <xilinx:canUpgradeFrom>user.org:user:myip_watch:1.1</xilinx:canUpgradeFrom>
+        <xilinx:canUpgradeFrom>user.org:user:myip_watch:1.2</xilinx:canUpgradeFrom>
       </xilinx:upgrades>
-      <xilinx:coreCreationDateTime>2026-01-30T01:18:09Z</xilinx:coreCreationDateTime>
+      <xilinx:coreCreationDateTime>2026-01-30T03:10:08Z</xilinx:coreCreationDateTime>
     </xilinx:coreExtensions>
     <xilinx:packagingInfo>
       <xilinx:xilinxVersion>2024.2</xilinx:xilinxVersion>
       <xilinx:checksum xilinx:scope="busInterfaces" xilinx:value="206b0a70"/>
       <xilinx:checksum xilinx:scope="memoryMaps" xilinx:value="ed1368d5"/>
-      <xilinx:checksum xilinx:scope="fileGroups" xilinx:value="0bb1135f"/>
+      <xilinx:checksum xilinx:scope="fileGroups" xilinx:value="b63e5c49"/>
       <xilinx:checksum xilinx:scope="ports" xilinx:value="97b0e71a"/>
       <xilinx:checksum xilinx:scope="hdlParameters" xilinx:value="2e811c89"/>
       <xilinx:checksum xilinx:scope="parameters" xilinx:value="22d06530"/>
