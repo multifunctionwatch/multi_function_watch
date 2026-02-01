@@ -340,12 +340,12 @@
 	          end                                       
 	        end                                         
 	// Implement memory mapped register select and read logic generation
-	  wire [7:0] hour, min;
+	  wire [7:0] hour, min, sec;
 	  assign S_AXI_RDATA = 
 	  (axi_araddr[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB] == 3'h0) ? slv_reg0 : 
 	  (axi_araddr[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB] == 3'h1) ? hour : 
 	  (axi_araddr[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB] == 3'h2) ? min : 
-	  (axi_araddr[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB] == 3'h3) ? slv_reg3 : 
+	  (axi_araddr[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB] == 3'h3) ? sec : 
 	  (axi_araddr[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB] == 3'h4) ? slv_reg4 : 
 	  (axi_araddr[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB] == 3'h5) ? slv_reg5 : 
 	  (axi_araddr[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB] == 3'h6) ? slv_reg6 : 
@@ -357,7 +357,7 @@
         .hour_up_cntr(slv_reg0[1]),
         .min_up_cntr(slv_reg0[2]),
         .clear(slv_reg0[3]),
-        .hour(hour), .min(min));
+        .hour(hour), .min(min), .sec(sec));
 	// User logic ends
 
 	endmodule
